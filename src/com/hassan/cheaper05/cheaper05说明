@@ -1,0 +1,39 @@
+		定时/计划任务功能在移动开发领域使用较多，比如Android技术，定时计划任务功能在Java中使用的
+主要就是Timer对象，它在内部还是使用多线程的方式进行处理，所以它和多线程技术还是有非常大的关联，本章
+着重掌握一下技术点：
+		●如何实现指定时间执行任务
+		●如何实现按指定周期执行任务
+
+		
+demo01演示了在当前时间的十秒之后执行一个特定的任务,但是发现Timer开启的线程并没有停止。
+demo02解决了demo01中的线程没有停止的问题，但是并不完美（比如一个Timer中有很多个TimerTask）。
+
+一些api：
+	一、Timer.schedule(TimerTask task, Date time)：在指定的日期执行一次某一任务。
+	二、Timer.schedule(TimerTask, Date firstTime, long intervalPeriod)：在指定的日期之后按照指定的
+间隔周期，无限循环的执行某一任务。
+	三、Timer.schedule(TimerTask task, long delay)：以当前的时间作为参考，在此时间的基础上延迟指定的
+毫秒数后执行一次TimerTask任务。
+	四、Timer.schedule(TimerTask task, long delay, long period)：以当前的时间作为参考，在此时间的基
+础上延迟指定的毫秒数后以某一时间间隔无限期的执行某一个任务。
+	五、Timer.scheduleAtFixedRate()的api和Timer.schedule()类似。
+	六、TimerTask.cancel()：将自身从任务队列中清除。
+	七、将任务队列中全部的任务进行清空，但这并不是一个十分保险的方法，原因是Timer类中的cancel方法可能会争
+抢不到quene锁(至于为什么有时候争抢不到quene锁，还需要进一步研究，这与jdk的实现有关)。源码如下：
+		private final TaskQueue queue = new TaskQueue();
+	    public void cancel() {
+	        synchronized(queue) {
+	            thread.newTasksMayBeScheduled = false;
+	            queue.clear();
+	            queue.notify();  // In case queue was already empty.
+	        }
+    	}
+     	demo03将这种情况进行了暴露。
+     	
+tips：
+	一、有时候Timer并不能按照我们的预期在指定的时间执行指定的任务，原因是TimerTask是以队列的方式一个一个
+被顺序的执行、前面的任务有可能消耗的时间较长，则后面的任务会被延后。
+	二、Timer.schedule()方法不具有追赶执行性，Timer.scheduleAtFixedRate()方法具有追赶执行性。追赶执行性
+的意思是补充没有执行的任务，比如当前时间是2017-05-29 16:33:33，然后启动一个任务，此任务的执行时间是从2017-05-29 16:30:33
+开始每五秒循环无限期的执行下去，scheduleAtFixedRate会首先补充执行16:30:33到16:33:33之间缺失的任务，schedule
+则不会。

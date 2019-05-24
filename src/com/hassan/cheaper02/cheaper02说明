@@ -1,0 +1,4 @@
+demo01演示了synchronized同步方法。
+demo02演示了synchronized同步代码块。
+demo03演示了volitale的作用（使变量在多个线程之间可见）。
+demo04演示了类锁和对象锁是两把不一样的锁

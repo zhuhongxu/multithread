@@ -1,0 +1,5 @@
+一、变量值的共享可以使用public static变量的形式，所有的线程都使用同一个public static变量。如果想实现每一个线程都有自己的共享变量该如何解决呢?
+JDK中提供的类ThreadLocal正是为了解决这样的问题。
+	类ThreadLocal主要解决的就是每个线程都绑定自己的值，可以将ThreadLocal类比喻成全局存放数据的黑盒子，盒子中可以存放每个线程的私有数据。
+二、com.hassan.cheaper03.demo03.threadLocal演示了ThreadLocal的使用
+三、com.hassan.cheaper03.demo03.initfirsttime解决了ThreadLocal.get()返回null的问题

@@ -1,0 +1,5 @@
+		Object类中的wait()方法相当于Condition类中的await()方法。
+		Object类中的wait(long timeout)方法相当于Condition中的await(long time,TimeUnit unit)方法。
+		Object类中的notify()方法相当于Condition类中的signal()方法。
+		Object类中的notifyAll()方法相当于Condition类中的signAll()方法。
+
